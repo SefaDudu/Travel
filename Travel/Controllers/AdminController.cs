@@ -11,11 +11,13 @@ namespace Travel.Controllers
     {
         Context c = new Context();
         // GET: Admin
+        [Authorize]
         public ActionResult Index()
         {
             var result = c.Blogs.ToList();
             return View(result);
         }
+        [Authorize]
         [HttpGet]
         public ActionResult YeniBlog() //HTTP GET için çalışır
         {
@@ -35,6 +37,7 @@ namespace Travel.Controllers
             c.SaveChanges();
             return RedirectToAction("Index");
         }
+        [Authorize]
         public ActionResult BlogGetir(int id)
         {
             var b = c.Blogs.Find(id);
@@ -50,7 +53,34 @@ namespace Travel.Controllers
             c.SaveChanges();
             return RedirectToAction("Index");
         }
-
-
+        [Authorize]
+        public ActionResult YorumListesi()
+        {
+            var result = c.Yorumlars.ToList();
+            return View(result);
+        }
+        public ActionResult YorumSil(int id)
+        {
+            var b = c.Yorumlars.Find(id);
+            c.Yorumlars.Remove(b);
+            c.SaveChanges();
+            return RedirectToAction("YorumListesi");
+        }
+        [Authorize]
+        public ActionResult YorumGetir(int id)
+        {
+            var b = c.Yorumlars.Find(id);
+            return View("YorumGetir", b);
+        }
+        public ActionResult YorumGuncelle(Yorumlar p)
+        {
+            var b = c.Yorumlars.Find(p.Id);
+            b.KullaniciAdi = p.KullaniciAdi;
+            b.Mail = p.Mail;
+            b.Yorum = p.Yorum;
+         
+            c.SaveChanges();
+            return RedirectToAction("YorumListesi");
+        }
     }
 }
